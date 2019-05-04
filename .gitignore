@@ -12,5 +12,6 @@ Reacehr1.app/
 log/
 tf_log/
 unity-environment.log
+tensorboardX/
 =======
 >>>>>>> 39a7e42c5e38a610392ec4c4bed82ca67cac4556
