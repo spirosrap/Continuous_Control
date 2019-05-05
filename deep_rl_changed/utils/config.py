@@ -66,9 +66,16 @@ class Config:
     @eval_env.setter
     def eval_env(self, env):
         self.__eval_env = env
-        self.state_dim = env.state_dim
-        self.action_dim = env.action_dim
-        self.task_name = env.name
+        brain_name = env.brain_names[0]
+        brain = env.brains[brain_name]
+        env_info = env.reset(train_mode=True)[brain_name]
+        states = env_info.vector_observations
+        state_size = states.shape[1]
+        brain_name = env.brain_names[0]
+        brain = env.brains[brain_name]
+        self.state_dim = state_size
+        self.action_dim = brain.vector_action_space_size
+        self.task_name = "env.name"
 
     def add_argument(self, *args, **kwargs):
         self.parser.add_argument(*args, **kwargs)

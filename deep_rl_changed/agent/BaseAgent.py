@@ -37,14 +37,24 @@ class BaseAgent:
 
     def eval_episode(self):
         env = self.config.eval_env
-        state = env.reset()
+        # state = env.reset()
+        brain_name = env.brain_names[0]
+        env_info = env.reset(train_mode=True)[brain_name]
+        state = env_info.vector_observations
+        scores = 0
         while True:
             action = self.eval_step(state)
-            state, reward, done, info = env.step(action)
-            ret = info[0]['episodic_return']
-            if ret is not None:
+
+            # state, reward, done, info = env.step(action)
+            env_info = env.step(action)[brain_name]           # send all actions to tne environment
+            next_states = env_info.vector_observations         # get next state (for each agent)
+            rewards = env_info.rewards                         # get reward (for each agent)
+            dones = env_info.local_done[0]                        # see if episode finished
+            scores += env_info.rewards[0]                         # update the score (for each agent)
+
+            if dones:
                 break
-        return ret
+        return scores
 
     def eval_episodes(self):
         episodic_returns = []
